@@ -3,13 +3,15 @@ name: Monitor ClassForKids
 on:
   schedule:
     # Runs every 11 minutes (slight change to reset GitHub's schedule)
-    - cron: '*/11 * * * *'
+    - cron: '0,30 6-19 * * *'
   # Allow manual trigger from GitHub Actions UI
   # workflow_dispatch:
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
     steps:
       - name: Checkout code

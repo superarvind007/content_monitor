@@ -17,7 +17,7 @@ from email.mime.multipart import MIMEMultipart
 import time
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 # ============================================================
 # CONFIGURATION
@@ -29,6 +29,7 @@ URL = "https://sportscoachingspecialists.classforkids.io/?venueName=Broomfield%2
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "")
 SENDER_APP_PASSWORD = os.environ.get("SENDER_APP_PASSWORD", "")
 RECIPIENT_EMAIL = os.environ.get("RECIPIENT_EMAIL", "")
+RECIPIENTS = [email.strip() for email in RECIPIENT_EMAIL.split(",") if email.strip()]
 
 STATE_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), ".classforkids_state.json"
@@ -153,12 +154,12 @@ def check_page():
 
 def send_email(result):
     """Send a notification email via Gmail SMTP."""
-    if not all([SENDER_EMAIL, SENDER_APP_PASSWORD, RECIPIENT_EMAIL]):
+    if not all([SENDER_EMAIL, SENDER_APP_PASSWORD, RECIPIENTS]):
         print("⚠️  Email not configured — set GitHub Secrets: SENDER_EMAIL, SENDER_APP_PASSWORD, RECIPIENT_EMAIL")
         return False
 
     booking_url = result.get("booking_url") or URL
-    now = datetime.utcnow().strftime("%A %d %B %Y at %H:%M:%S UTC")
+    now = datetime.now(timezone.utc).strftime("%A %d %B %Y at %H:%M:%S UTC")
 
     subject = "🎉 ClassForKids Booking Available — Broomfield Primary School!"
 
@@ -194,15 +195,15 @@ def send_email(result):
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = SENDER_EMAIL
-    msg["To"] = RECIPIENT_EMAIL
+    msg["To"] = ", ".join(RECIPIENTS)
     msg.attach(MIMEText(result["details"], "plain"))
     msg.attach(MIMEText(html_body, "html"))
 
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(SENDER_EMAIL, SENDER_APP_PASSWORD)
-            server.sendmail(SENDER_EMAIL, RECIPIENT_EMAIL, msg.as_string())
-        print(f"✅ Email sent to {RECIPIENT_EMAIL}")
+            server.sendmail(SENDER_EMAIL, RECIPIENTS, msg.as_string())
+        print(f"✅ Email sent to {', '.join(RECIPIENTS)}")
         return True
     except Exception as e:
         print(f"❌ Email failed: {e}")
@@ -211,7 +212,7 @@ def send_email(result):
 
 def main():
     state = load_state()
-    now = datetime.utcnow().isoformat() + "Z"
+    now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
     print(f"\n{'='*60}")
     print(f"🔍 Checking ClassForKids at {now}")

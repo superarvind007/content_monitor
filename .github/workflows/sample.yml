@@ -1,0 +1,11 @@
+on:
+  schedule:
+    - cron: '*/3 * * * *'
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4

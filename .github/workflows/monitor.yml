@@ -30,13 +30,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install selenium
 
-      - name: Restore monitor state
-        id: cache-state
-        uses: actions/cache@v4
-        with:
-          path: .classforkids_state.json
-          key: monitor-state-v3-${{ hashFiles('monitor.py') }}
-          restore-keys: monitor-state-v3-
 
       - name: Run monitor check
         env:

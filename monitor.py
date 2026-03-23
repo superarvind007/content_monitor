@@ -23,8 +23,8 @@ from datetime import datetime, timezone
 # CONFIGURATION
 # ============================================================
 
-# URL = "https://sportscoachingspecialists.classforkids.io/?venueName=Broomfield%20Primary%20School"
-URL = "https://sportscoachingspecialists.classforkids.io/?venueName=Highwoods%20Primary%20School"
+URL = "https://sportscoachingspecialists.classforkids.io/?venueName=Broomfield%20Primary%20School"
+# URL = "https://sportscoachingspecialists.classforkids.io/?venueName=Highwoods%20Primary%20School"
 
 # Read from environment variables (set via GitHub Secrets)
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "")

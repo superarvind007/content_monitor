@@ -35,8 +35,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .classforkids_state.json
-          key: monitor-state-${{ github.run_id }}
-          restore-keys: monitor-state-
+          key: monitor-state-v3-${{ hashFiles('monitor.py') }}
+          restore-keys: monitor-state-v3-
 
       - name: Run monitor check
         env:

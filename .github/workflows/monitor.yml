@@ -3,7 +3,7 @@ name: Monitor ClassForKids
 on:
   schedule:
     # Runs every 11 minutes (slight change to reset GitHub's schedule)
-    - cron: '0,30 6-19 * * *'
+    # - cron: '0,30 6-19 * * *'
   # Allow manual trigger from GitHub Actions UI
   workflow_dispatch:
 
